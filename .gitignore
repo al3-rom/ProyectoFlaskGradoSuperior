@@ -5,7 +5,8 @@ __pycache__
 /pgdata
 *.db
 /wannapop/static/uploads/*
-!wannapop/static/uploads/6ff4b9d68ca44493b63aa30e8074c082.png
-!wannapop/static/uploads/9b8b3f3eeaa6498c838e296f577926a9.png
+!wannapop/static/uploads/Admin223.jpg
+!wannapop/static/uploads/producto.jpg
+!wannapop/static/uploads/User223.jpg
 app.log*
 /mysql_data

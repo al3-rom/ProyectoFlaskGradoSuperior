@@ -37,6 +37,8 @@ El proyecto está desarrollado con Flask (Python) como framework principal, e im
 
 ---
 
+# Acuerdate de cambiar el nombre para la base de datos: database.db.initial --->  database.db
+
 ## He creado 2 usuarios de prueba:
 
 Admin223@gmail.com - Usuario con role 'Admin' (Admin)
