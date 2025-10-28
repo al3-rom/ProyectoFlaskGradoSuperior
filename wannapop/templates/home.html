@@ -1,0 +1,9 @@
+{% extends './base.html' %}
+{% block title %}Wannapop - Compra y vende tus productos{% endblock %}
+{% block body %}
+<section class="d-flex flex-column gap-3 text-center">
+    <h1 class="fw-bold display-5 mt-4 mb-3 text-dark border-bottom pb-2">Home</h1>
+    <h2 class="fw-bold"><a href="{{ url_for('routers_user.users')}}">Lista de usuarios</a></h2>
+    <h2 class="fw-bold"><a href="{{ url_for('routes_products.get_products')}}">Lista de productos</a></h2>
+</section>
+{% endblock %}

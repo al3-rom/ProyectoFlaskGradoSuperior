@@ -1,0 +1,141 @@
+{% extends './base.html' %} {% block title %}Iniciar sesión{% endblock %} {%
+block body %}
+<div
+  class="container min-vh-100 d-flex justify-content-center align-items-center"
+>
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%">
+    <h1 class="text-center mb-4">Iniciar sesión</h1>
+
+    <form
+      action="{{ url_for('auth_page.login') }}"
+      method="POST"
+      class="d-flex flex-column gap-3"
+    >
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.email.label(class="form-label") }} {{
+        form.email(class="form-control", placeholder="example@example.com") }}
+      </div>
+
+      <div class="form-group">
+        {{ form.password.label(text="Contraseña") }} {{
+        form.password(class="form-control", placeholder="Contraseña") }}
+      </div>
+
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          id="accept_terms"
+          required
+        />
+        <label class="form-check-label" for="accept_terms">
+          He leído y acepto las
+          <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal"
+            >normas del sitio</a
+          >.
+        </label>
+      </div>
+
+      <div class="text-center">
+        {{ form.submit(class="btn btn-dark w-100") }}
+      </div>
+    </form>
+
+    <p class="text-center mt-3 mb-0">
+      ¿No tienes una cuenta?
+      <a href="{{ url_for('auth_page.register') }}">Regístrate aquí</a>.
+    </p>
+
+    <p class="text-center mt-2 mb-0">
+      ¿Aún no has recibido el correo de verificación?
+      <a href="{{ url_for('auth_page.resend_email') }}">Reenviar enlace</a>.
+    </p>
+
+    <div
+      class="modal fade"
+      id="termsModal"
+      tabindex="-1"
+      aria-labelledby="termsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="termsModalLabel">Normas del sitio</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <strong>Resumen:</strong>
+            <p>
+              Este sitio permite la compra y venta de productos entre usuarios.
+              Al registrarte aceptas usar la web de forma responsable y cumplir
+              las normas básicas.
+            </p>
+            <hr />
+
+            <strong>Normas completas:</strong>
+            <ol class="list-group-numbered">
+              <li class="list-group-item">
+                Los usuarios deben proporcionar información veraz.
+              </li>
+              <li class="list-group-item">
+                No se permite la publicación de productos ilegales, falsificados
+                o robados.
+              </li>
+              <li class="list-group-item">
+                Las descripciones e imágenes deben corresponder al producto
+                real.
+              </li>
+              <li class="list-group-item">
+                El sitio no se responsabiliza de las transacciones entre
+                usuarios.
+              </li>
+              <li class="list-group-item">
+                Está prohibido el uso del sitio para actividades fraudulentas o
+                ilícitas.
+              </li>
+              <li class="list-group-item">
+                El incumplimiento de estas normas podrá conllevar la suspensión
+                de la cuenta.
+              </li>
+              <li class="list-group-item">
+                Los datos personales se tratarán según la normativa de
+                protección de datos vigente.
+              </li>
+            </ol>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("form");
+    const checkbox = document.getElementById("accept_terms");
+
+    form.addEventListener("submit", (e) => {
+      if (!checkbox.checked) {
+        e.preventDefault();
+        alert("Debes aceptar las normas del sitio para continuar.");
+      }
+    });
+  });
+</script>
+{% endblock %}

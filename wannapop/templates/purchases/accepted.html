@@ -1,0 +1,78 @@
+{% extends './base.html' %}
+{% block title %}Ofertas aceptadas{% endblock %}
+
+{% block body %}
+<main class="container py-4">
+    <h1 class="mb-4">Mis ofertas aceptadas</h1>
+
+    {% if offers %}
+    <ul class="list-group">
+        {% for offer in offers %}
+        <li
+            class="list-group-item d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-3">
+            <div class="d-flex align-items-center gap-3 mb-2 mb-md-0">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}">
+                    <img src="{{ url_for('static', filename='uploads/' ~ offer.product.photo) }}"
+                        alt="{{ offer.product.title }}" class="rounded"
+                        style="width: 80px; height: 80px; object-fit: cover;">
+                </a>
+
+                <div>
+                    <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}"
+                        class="fw-bold text-dark text-decoration-none fs-5">{{ offer.product.title }}</a>
+
+                    <div class="mt-1 text-secondary">
+                        <span class="text-dark fw-semibold">Precio ofrecido:</span>
+                        <span class="text-success">{{ offer.offer }} ⌬</span>
+                        /
+                        <span class="text-dark">Precio mínimo:</span>
+                        <span class="text-primary">{{ offer.product.price }} ⌬</span>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        Fecha: <span class="text-dark">{{ offer.created.strftime('%d/%m/%Y') }}</span> a las
+                        <span class="text-dark">{{ offer.created.strftime('%H:%M') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 mt-md-0 d-flex gap-2 flex-column align-items-md-end align-items-center text-center text-md-end w-100">
+                <div class="text-success fw-semibold d-flex align-items-center gap-1">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Oferta aceptada
+                </div>
+                <a type="button" class="small text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Ver instrucciones para continuar
+                </a>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Instrucciones</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ offer.accepted_offer.instructions }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        <p>No tienes ofertas aceptadas todavía.</p>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

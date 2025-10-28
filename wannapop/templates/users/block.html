@@ -1,0 +1,19 @@
+{% extends './base.html' %}
+{% block title %}Bloquear usuario{% endblock %}
+{% block body %}
+
+
+<h3>Blockear a {{usuario.name}}</h3>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{form.reason.label(class="form-label")}}</p>
+    <p>{{form.reason(class="form-label")}}</p>
+
+    <button type="submit">Confirmar</button>
+
+</form>
+
+
+<a class="action" href="{{url_for('routers_user.users')}}">Volver a la lista</a>
+
+{% endblock %}

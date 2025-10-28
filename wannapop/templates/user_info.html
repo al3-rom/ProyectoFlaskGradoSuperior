@@ -1,0 +1,106 @@
+{% extends './base.html' %}
+{% block title %}Perfil de {{ usuario.name.capitalize() }}{% endblock %}
+
+{% block body %}
+<main>
+
+    <section class="card p-4 mb-4 shadow">
+        <div class="row align-items-center">
+            <div class="col-12 col-md-4 text-center">
+                <img src="{{ url_for('static', filename='uploads/' ~ usuario.avatar) }}"
+                     alt="Avatar de {{ usuario.name }}"
+                     class="rounded-circle shadow"
+                     style="width: 200px; height: 200px; object-fit: cover;">
+            </div>
+            <div class="col-12 col-md-8">
+                <h3>{{ usuario.name.capitalize() }}</h3>
+                <p class="text-secondary mb-1">Email: {{ usuario.email }}</p>
+                <p class="text-secondary mb-1">Rol: {{ usuario.role.name|capitalize }}</p>
+                <p class="text-secondary mb-1">Creado: {{ usuario.created.strftime('%d/%m/%Y %H:%M') }}</p>
+                <p class="text-secondary mb-1">Actualizado: {{ usuario.updated.strftime('%d/%m/%Y %H:%M') }}</p>
+                <p class="text-secondary mb-1">Ofertas aceptadas: {{total_aceptadas}}</p>
+                <p class="text-secondary mb-1">Ofertas recibidas: {{total_ofertas}}</p>
+                <a href="{{ url_for('routers_user.users') }}" class="btn btn-outline-secondary border-black mt-3">
+                    Lista de usuarios
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">Productos de {{ usuario.name.capitalize() }}</h1>
+        {% if current_user.id == usuario.id and current_user.role.name == 'wanner' %}
+            <a href="{{ url_for('routes_products.create_product') }}" class="btn btn-dark">
+                Crear producto <i class="bi bi-plus-lg"></i>
+            </a>
+        {% endif %}
+    </div>
+
+    {% if products %}
+    <section class="row g-4 pb-5">
+        {% for product in products %}
+        {% if not (product.blocked and current_user.role.name == 'wanner') %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            {% if product.blocked %}
+            <div class="card h-100 shadow border border-danger position-relative opacity-50">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}">
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}" alt="{{ product.title }}"
+                        class="card-img-top object-fit-cover" style="height: 300px;">
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0 text-danger fw-semibold">
+                            <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}"
+                               class="text-danger text-decoration-none">{{ product.title }}</a>
+                        </h5>
+                        <span class="fw-bold text-danger">BLOQUEADO</span>
+                    </div>
+                    <p class="text-secondary text-truncate" style="font-size: 0.9rem;">{{ product.description }}</p>
+                </div>
+                <div class="position-absolute top-50 start-50 translate-middle bg-danger text-white px-3 py-1 rounded">
+                    <i class="bi bi-shield-lock"></i> Bloqueado
+                </div>
+            </div>
+            {% else %}
+            <div class="card h-100 shadow border-0 overflow-hidden">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}">
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}" alt="{{ product.title }}"
+                        class="card-img-top object-fit-cover" style="height: 300px;">
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="mb-0 text-dark fw-semibold">{{ product.title }}</h5>
+                        <span class="fw-bold text-primary">{{ product.price }} ⌬</span>
+                    </div>
+                    <p class="text-secondary text-truncate">{{ product.description }}</p>
+
+                    {% if current_user.id == usuario.id %}
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('routes_products.update_product', hashid=encode_id(product.id)) }}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        <a href="{{ url_for('routes_products.delete_product', hashid=encode_id(product.id)) }}" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+    </section>
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        {% if usuario.role.name != 'wanner' %}
+            <p>Admin o Moderator no puede tener productos</p>
+        {% else %}
+            <p>Este usuario no tiene productos.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</main>
+{% endblock %}

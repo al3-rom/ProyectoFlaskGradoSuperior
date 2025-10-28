@@ -1,0 +1,75 @@
+{% extends './base.html' %}
+{% block title %}Ofertas a mis productos{% endblock %}
+
+{% block body %}
+<main class="container py-4">
+  <h1 class="mb-4">Ofertas a mis productos</h1>
+
+  {% if no_aceptadas %}
+    {% for product, product_offers in offers_by_product.items() %}
+      {% if not product.blocked %}
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex align-items-start gap-3">
+            <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}">
+              <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}"
+                   alt="{{ product.title }}"
+                   class="rounded"
+                   style="width: 100px; height: 100px; object-fit: cover;">
+            </a>
+
+            <div class="flex-grow-1">
+              <h5 class="card-title mb-1">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}"
+                   class="text-decoration-none text-dark">
+                   {{ product.title }}
+                </a>
+              </h5>
+              <div class="text-muted small">
+                Precio actual: <span class="fw-semibold text-primary">{{ product.price }} ⌬</span>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          {% for offer in product_offers %}
+          <div class="border rounded p-3 mb-3">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+              <div>
+                <p class="mb-1"><strong>Comprador:</strong> {{ offer.buyer.name }}</p>
+                <p class="mb-1">
+                  <strong>Oferta:</strong>
+                  <span class="{{ 'text-success' if offer.offer >= product.price else 'text-danger' }}">
+                    {{ offer.offer }} ⌬
+                  </span>
+                </p>
+              </div>
+
+              <form method="POST"
+                    action="{{ url_for('routes_sales.accept_offer', offer_id=encode_id(offer.id)) }}"
+                    class="w-100 w-md-auto">
+                {{ form.hidden_tag() }}
+                <div class="form-group mb-2">
+                  {{ form.instructions.label(class="form-label fw-semibold") }}
+                  {{ form.instructions(class="form-control", placeholder="Escribe las instrucciones para el comprador...") }}
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  {{ form.submit(value="Aceptar oferta", class="btn btn-dark w-100 w-md-auto") }}
+                </div>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+  <div class="text-center py-5 text-secondary">
+    <p>No hay ofertas para tus productos todavía.</p>
+  </div>
+  {% endif %}
+</main>
+{% endblock %}

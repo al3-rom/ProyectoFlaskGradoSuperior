@@ -1,0 +1,65 @@
+{% extends './base.html' %}
+{% block title %}Ventas inactivas{% endblock %}
+
+{% block body %}
+<main>
+    <h1 class="mb-4">Mis ventas inactivas</h1>
+
+    {% if offers %}
+    <ul class="list-group">
+        {% for offer in offers %}
+        <li class="list-group-item py-3">
+            <div class="d-flex flex-column flex-md-row align-items-center">
+                <div class="d-flex align-items-start gap-3 flex-grow-1">
+                    <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}">
+                        <img src="{{ url_for('static', filename='uploads/' ~ offer.product.photo) }}"
+                            alt="{{ offer.product.title }}" class="rounded"
+                            style="width:80px; height:80px; object-fit:cover;">
+                    </a>
+
+                    <div>
+                        <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}"
+                            class="fw-bold text-dark text-decoration-none fs-5">{{ offer.product.title }}</a>
+
+                        <div class="mt-1 text-secondary">
+                            <span class="text-dark fw-semibold">Precio vendido:</span>
+                            <span class="text-success">{{ offer.offer }} ⌬</span>
+                            /
+                            <span class="text-dark">Precio mínimo:</span>
+                            <span class="text-primary">{{ offer.product.price }} ⌬</span>
+                        </div>
+
+                        <div class="text-muted small mt-1">
+                            Fecha: <span class="text-dark">{{ offer.created.strftime('%d/%m/%Y') }}</span>
+                            a las <span class="text-dark">{{ offer.created.strftime('%H:%M') }}</span>
+                        </div>
+
+                        <div class="text-muted small mt-1">
+                            Comprador:
+                            <a href="{{ url_for('routers_user.user_detail', hashid=encode_id(offer.buyer.id)) }}"
+                                class="text-decoration-none text-dark fw-semibold">
+                                {{ offer.buyer.name }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ms-auto">
+                    {% if offer.accepted_offer %}
+                    <span class="badge bg-success">Venta aceptada</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Venta cancelada o inactiva</span>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        <p>No tienes ventas inactivas todavía.</p>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

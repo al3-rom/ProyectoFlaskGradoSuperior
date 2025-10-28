@@ -1,0 +1,12 @@
+{% extends './base.html' %}
+{% block title %}Eliminar usuario{% endblock %}
+{% block body %}
+  <h2>Eliminar usuario</h2>
+  <p>¿Estás seguro de que deseas eliminar al usuario {{ usuario.name }}?</p>
+
+  <form method="POST">
+    {{ form.hidden_tag() }}  
+    <button type="submit" class="btn btn-outline-danger p-2" data-confirm="¿Seguro que quieres eliminar al usuario {{ usuario.name }}?">{{ form.submit.label.text or 'Confirmar' }}</button>
+    <a href="{{ url_for('routers_user.users') }}" class="btn btn-outline-success p-2">Cancelar</a>
+  </form>
+{% endblock %}

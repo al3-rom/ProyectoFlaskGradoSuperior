@@ -1,0 +1,140 @@
+{% extends './base.html' %}
+{% block title %}Ventas aceptadas{% endblock %}
+
+{% block body %}
+<main class="container py-4">
+    <h1 class="mb-4">Mis ventas aceptadas</h1>
+
+<<<<<<< HEAD
+{% if acceptedOffers %}
+  {% for accepted in acceptedOffers %}
+    <section class="container d-flex flex-column gap-2 p-4 border rounded mb-3">
+      <div class="d-flex flex-column">
+        <p>Producto: <span>{{ accepted.offer.product.title }}</span></p>
+        <p>
+          <img src="{{ url_for('static', filename='uploads/' ~ accepted.offer.product.photo) }}"
+               alt="{{ accepted.offer.product.title }}" style="max-height: 250px;">
+        </p>
+        <p>Precio actual: <span>{{ accepted.offer.product.price }}</span></p>
+      </div>
+=======
+    {% if acceptedOffers %}
+    <ul class="list-group">
+        {% for accepted in acceptedOffers %}
+        <li class="list-group-item d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-3">
+            <div class="d-flex align-items-center gap-3 mb-2 mb-md-0 flex-grow-1">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(accepted.offer.product.id)) }}">
+                    <img src="{{ url_for('static', filename='uploads/' ~ accepted.offer.product.photo) }}"
+                         alt="{{ accepted.offer.product.title }}"
+                         class="rounded" style="width: 80px; height: 80px; object-fit: cover;">
+                </a>
+>>>>>>> origin/b0.3-nikita
+
+                <div>
+                    <a href="{{ url_for('routes_products.get_product', hashid=encode_id(accepted.offer.product.id)) }}"
+                       class="fw-bold text-dark text-decoration-none fs-5">
+                        {{ accepted.offer.product.title }}
+                    </a>
+
+                    <div class="mt-1 text-secondary">
+                        <span class="text-dark fw-semibold">Precio del producto:</span>
+                        <span class="text-primary">{{ accepted.offer.product.price }} ⌬</span>
+                    </div>
+
+                    <div class="mt-1 text-secondary">
+                        <span class="text-dark fw-semibold">Oferta aceptada:</span>
+                        <span class="text-success">{{ accepted.offer.offer }} ⌬</span>
+                    </div>
+
+                    <div class="text-muted small mt-1">
+                        Fecha: <span class="text-dark">{{ accepted.offer.created.strftime('%d/%m/%Y') }}</span>
+                        a las <span class="text-dark">{{ accepted.offer.created.strftime('%H:%M') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 mt-md-0 d-flex flex-column align-items-md-end align-items-center text-center text-md-end w-100 gap-2">
+                <div class="text-success fw-semibold d-flex align-items-center gap-1">
+                    <i class="bi bi-bag-check-fill"></i>
+                    Venta confirmada
+                </div>
+
+                <a type="button" class="small text-primary" data-bs-toggle="modal"
+                   data-bs-target="#instructionsModal{{ accepted.id }}">
+                    Ver / editar instrucciones
+                </a>
+            </div>
+        </li>
+
+        <!--  Modal -->
+        <div class="modal fade" id="instructionsModal{{ accepted.id }}" tabindex="-1"
+             aria-labelledby="instructionsLabel{{ accepted.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-3">
+                    <div class="modal-header bg-dark text-white">
+                        <h5 class="modal-title" id="instructionsLabel{{ accepted.id }}">
+                            Instrucciones para el comprador
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white"
+                                data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form data-aviso-cambios method="POST"
+                              action="{{ url_for('routes_sales.update_offer', accepted_offer_id=encode_id(accepted.offer_id)) }}">
+                            {{ form.hidden_tag() }}
+                            <div class="form-group mb-3">
+                                {{ form.instructions.label(class="form-label fw-semibold") }}
+                                {{ form.instructions(value=accepted.instructions, class="form-control border-1 shadow-sm") }}
+                            </div>
+                            <div class="text-center">
+                                {{ form.submit(value="Guardar cambios", class="btn btn-dark w-100") }}
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        <form method="POST"
+                              action="{{ url_for('routes_sales.delete_accepted_offer', accepted_offer_id=encode_id(accepted.offer_id)) }}">
+                            {{ form.hidden_tag() }}
+                            <button type="submit"
+                                    class="btn btn-outline-danger w-100"
+                                    data-confirm="¿Seguro que quieres cancelar esta oferta?">
+                                Cancelar venta
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        <p>No tienes ventas aceptadas todavía.</p>
+    </div>
+<<<<<<< HEAD
+    <div class="text-center mt-3">
+      {{ form.submit(value="Guardar", class="btn btn-dark w-100") }}
+    </div>
+  </form>
+
+
+  <form method="POST"
+        action="{{ url_for('routes_sales.delete_accepted_offer', accepted_offer_id=encode_id(accepted.offer_id)) }}">
+    {{ form.hidden_tag() }}
+    <div class="text-center mt-3">
+      <button data-cancelar type="submit" class="btn btn-outline-danger w-100" data-confirm="¿Seguro que quieres cancelar esta oferta?">Cancelar oferta</button>
+    </div>
+  </form>
+
+  {% endfor %}
+{%else%}
+  <h2>No hay productos en venta!</h2>
+{% endif %}
+
+=======
+    {% endif %}
+</main>
+>>>>>>> origin/b0.3-nikita
+{% endblock %}

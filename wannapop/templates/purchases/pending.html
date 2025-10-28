@@ -1,0 +1,71 @@
+{% extends './base.html' %}
+{% block title %}Ofertas pendientes{% endblock %}
+
+{% block body %}
+<main>
+    <h1 class="mb-4">Mis ofertas pendientes</h1>
+
+    {% if offers %}
+    <ul class="list-group">
+        {% for offer in offers %}
+        <li class="list-group-item py-3">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center">
+                <div class="d-flex align-items-start gap-3 flex-grow-1">
+                    <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}">
+                        <img src="{{ url_for('static', filename='uploads/' ~ offer.product.photo) }}"
+                            alt="{{ offer.product.title }}" class="rounded"
+                            style="width:80px; height:80px; object-fit:cover;">
+                    </a>
+
+                    <div>
+                        <a href="{{ url_for('routes_products.get_product', hashid=encode_id(offer.product.id)) }}"
+                            class="fw-bold text-dark text-decoration-none fs-5">{{ offer.product.title }}</a>
+
+                        <div class="mt-1 text-secondary">
+                            <span class="text-dark fw-semibold">Precio ofrecido:</span>
+                            <span class="{{ 'text-danger' if offer.offer < offer.product.price else 'text-success' }}">
+                                {{ offer.offer }} ⌬
+                            </span>
+                            /
+                            <span class="text-dark">Precio mínimo:</span>
+                            <span class="text-primary">{{ offer.product.price }} ⌬</span>
+                        </div>
+
+                        <div class="text-muted small mt-1">
+                            Fecha: <span class="text-dark">{{ offer.created.strftime('%d/%m/%Y') }}</span>
+                            a las <span class="text-dark">{{ offer.created.strftime('%H:%M') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3 mt-md-0 align-items-center ms-md-3">
+                    <form action="{{ url_for('routes_purchases.update_offer', hashid=encode_id(offer.id)) }}"
+                        method="POST" class="d-flex gap-2 mb-0 align-items-center">
+                        {{ forms[offer.id].hidden_tag() }}
+                        {{ forms[offer.id].price(class_="form-control form-control-sm", step="0.01",
+                        style="width:110px;", min=offer.product.price) }}
+                        {{ forms[offer.id].submit(class_="btn btn-primary btn-sm", value="Actualizar") }}
+                    </form>
+
+                    <form action="{{ url_for('routes_purchases.delete_offer', hashid=encode_id(offer.id)) }}"
+                        method="POST" class="mb-0">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger btn-sm d-flex align-items-center gap-1"
+                            data-confirm="¿Eliminar esta oferta?">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        <p>No has hecho ofertas todavía.</p>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

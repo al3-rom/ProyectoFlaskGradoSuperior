@@ -1,0 +1,73 @@
+{% extends './base.html' %}
+{% block body %}
+
+<div class="container shadow-sm p-4 mt-4">
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <ul class="container d-flex flex-column gap-3 shadow p-4 rounded mb-5">
+    {% if hay_bloqueado == True %}
+      <h2 class="p-3 d-flex flex-column text-center shadow-sm w-50 m-auto border border-secondary p-2 mb-2 border-opacity-50 border-2 rounded">Usuarios bloqueados</h2>
+
+      {% for usuario in usuarios %}
+        {% if usuario.blocked_as_user %}
+ 
+          <li class="p-2 d-flex flex-row align-items-center w-50 ">
+            <div>
+          
+              <label class="d-flex flex-wrap align-items-center gap-2 border border-secondary p-2 mb-2 border-opacity-50 border-2 rounded">
+                <i class="bi bi-person-exclamation fs-5"></i>
+                <input type="checkbox" name="usuarios" value="{{ encode_id(usuario.id) }}">
+                    <a class="fw-semibold text-decoration-none text-dark" href="{{ url_for('routers_user.user_detail', hashid=encode_id(usuario.id)) }}">
+                    {{ usuario.name }} 
+                    </a>
+                    ||
+                    <p class="mb-0 fw-semibold text-dark">{{ usuario.role.name}}</p>
+                    ||
+                    <p class="mb-0 fw-semibold  text-dark">{{ usuario.email}}</p>
+              </label>
+              
+            </div>
+          </li>
+
+        {% endif %}
+      {% endfor %}
+      </ul>
+    {%endif%} 
+    {% if hay_producto_bloqueado == True %}
+    <ul class="container d-flex flex-column gap-3 shadow p-4 rounded mb-5">
+      <h2 class="p-3 d-flex flex-column text-center shadow-sm w-50 m-auto border border-secondary p-2 mb-2 border-opacity-50 border-2 rounded">Productos bloqueados</h2>
+     
+      
+        {% for producto in productos %}
+          {% if producto.blocked %}
+            <li class="p-2 d-flex flex-row align-items-center w-50 ">
+              <div>
+                <label class="d-flex flex-wrap align-items-center gap-2 border border-secondary p-2 mb-2 border-opacity-50 border-2 rounded">
+                  <i class="bi bi-bag-x fs-5"></i>
+                  <input type="checkbox" name="productos" value="{{ encode_id(producto.id) }}">
+                  <a class="fw-semibold text-decoration-none text-dark" href="{{ url_for('routes_products.get_product', hashid=encode_id(producto.id)) }}">
+                    {{ producto.title }}
+                  </a>
+                </label>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      
+    </ul> 
+  {%endif%}
+        {% if hay_bloqueado == True  or hay_producto_bloqueado == True %}
+          <div class="text-center mt-4">
+                      <button type="submit" class="btn btn-success px-4 py-2">
+                        Desbloquear seleccionados
+                      </button>
+          </div>
+        {%else%}
+          <div class="text-center mt-4">
+                <p>No hay usuarios o productos bloqueados</p>
+          </div>
+        {%endif%}
+    
+  </form>
+</div>
+{% endblock %}

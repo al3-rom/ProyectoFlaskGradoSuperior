@@ -1,0 +1,148 @@
+{% extends './base.html' %} {% block body %}
+<h1
+  class="container text-center fw-bold display-4 mt-4 mb-3 text-dark border-bottom pb-2"
+>
+  Lista de todos los usuarios:
+</h1>
+
+<div class="container">
+  <ul class="d-flex flex-column gap-3 list-inline">
+    {% if is_admin %}
+    <a
+      class="btn btn-outline-success w-50 shadow-sm p-2 mt-2 mb-2 border-black m-auto"
+      href="{{ url_for('routers_user.create') }}"
+      >Crear usuario</a
+    >
+    {% endif %}
+
+    <div>
+      <form
+        method="get"
+        action="{{ url_for('routers_user.users') }}"
+        name="busqueda"
+        class="d-flex flex-row gap-2"
+        data-disable-on-submit
+      >
+        <input
+          type="text"
+          name="busqueda[nameOrmail]"
+          placeholder="Nombre de usuario o email"
+          onchange="this.form.submit()"
+          value="{{ request.args.get('busqueda[nameOrmail]','') }}"
+          class="w-25 p-2 border border-secondary  rounded"
+        />
+        <button id="buscar_btn" type="submit" class="btn btn-outline-secondary">Buscar</button>
+      </form>
+    </div>
+
+
+
+    {% for usuario, rol in usuarios %}
+  
+    {% if not (usuario.id in bloqueados and
+    current_user.role.name == "wanner") %}
+    <li class="users list-inline-item card p-3 d-flex">
+      <div class="d-flex flex-column align-items-start">
+        <div class="d-flex justify-content-between w-100">
+          <a
+            class="btn btn-outline-info w-25 p-2 border-black"
+            href="{{ url_for('routers_user.user_detail', hashid=encode_id(usuario.id)) }}"
+          >
+            {{ usuario.name }}
+          </a>
+
+          {% if is_admin or is_moderator %} {% if usuario.id in bloqueados %}
+          <div
+            class="btn text-color-red text-bg-danger p-2 border-black disabled"
+          >
+            BLOQUEADO
+          </div>
+          {% endif %} {% endif %}
+        </div>
+
+        <span class="btn btn-outline-dark mt-2 disabled"
+          >Email: {{ usuario.email }}</span
+        >
+        <span class="btn btn-outline-dark mt-2 mb-2 disabled"
+          >Rol: {{ rol.name|capitalize }}</span
+        >
+      </div>
+
+      {% if is_admin or is_moderator %}
+      <div class="d-flex flex-row justify-content-between gap-2">
+        {% if is_admin and rol.name != 'admin' and usuario.id != current_user.id
+        %}
+        <a
+          class="btn btn-outline-danger w-25 border-black"
+          href="{{ url_for('routers_user.delete_user', hashid=encode_id(usuario.id)) }}"
+        >
+          Eliminar usuario
+        </a>
+        <a
+          class="btn btn-outline-warning w-25 border-black"
+          href="{{ url_for('routers_user.update_user', hashid=encode_id(usuario.id)) }}"
+        >
+          Editar usuario
+        </a>
+        {% endif %} {% if (is_moderator or is_admin) and rol.name != 'admin' %}
+        {% if usuario.id in bloqueados %}
+        <a
+          class="btn btn-outline-success w-25 border-black"
+          href="{{ url_for('routers_block_users.unblock_user', hashid=encode_id(usuario.id)) }}"
+        >
+          [DESBLOQUEAR USUARIO]
+        </a>
+        {% else %}
+        <a
+          class="btn btn-outline-danger w-25 border-black"
+          href="{{ url_for('routers_block_users.block_user', hashid=encode_id(usuario.id)) }}"
+        >
+          Bloquear usuario
+        </a>
+        {% endif %} {% endif %}
+      </div>
+      {% endif %}
+    </li>
+     {%endif%}
+  {%else%}
+  <p>No hay usuarios</p>  
+  {% endfor %}
+ 
+  </ul>
+</div>
+
+{% if pagination.pages > 1 %}
+<nav class="mt-3">
+  <ul class="pagination d-flex gap-2">
+    {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('routers_user.users', page=pagination.prev_num, **qargs) }}">
+          Anterior
+        </a>
+      </li>
+    {% endif %}
+
+    {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=2, right_edge=1) %}
+      {% if p %}
+        <li class="page-item {{ 'active' if p == pagination.page }}">
+          <a class="page-link" href="{{ url_for('routers_user.users', page=p, **qargs) }}">{{ p }}</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           href="{{ url_for('routers_user.users', page=pagination.next_num, **qargs) }}">
+          Siguiente
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+  <span>Página {{ pagination.page }} de {{ pagination.pages }}</span>
+</nav>
+{% endif %}
+{% endblock %}

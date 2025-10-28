@@ -1,0 +1,35 @@
+{% extends './base.html' %}
+{% block title %}Eliminar producto{% endblock %}
+{% block body %}
+<main class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 450px; width: 100%;">
+        <h2 class="text-center mb-4 text-danger">¿Eliminar producto?</h2>
+
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}"
+                alt="{{ product.title }}"
+                class="rounded mb-2"
+                style="width: 180px; height: 180px; object-fit: cover; border: 1px solid #ddd;">
+            <p class="text-muted mb-0"><small>Imagen del producto</small></p>
+        </div>
+
+        <div class="mb-3">
+            <p><strong>Título:</strong> {{ product.title }}</p>
+            <p><strong>Descripción:</strong> {{ product.description }}</p>
+            <p><strong>Precio:</strong> {{ product.price }} €</p>
+        </div>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="d-flex flex-column gap-2">
+                <button type="submit" name="confirm" value="yes" class="btn btn-danger w-100" data-confirm="¿Seguro que quieres eliminar {{ product.title }}?">
+                    Confirmar eliminación
+                </button>
+                <button type="submit" name="confirm" value="no" class="btn btn-dark w-100">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

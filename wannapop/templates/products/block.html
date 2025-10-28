@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block title %}Bloquear producto{% endblock %}
+{% block body %}
+<main class="container py-5 min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+        <h1>Bloquear producto</h1>
+        <form method="POST" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.reason.label(class="form-label") }}
+                {{ form.reason(class="form-control") }}
+            </div>
+            <div class="d-flex justify-content-between mt-3 gap-2">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}"
+                    class="btn btn-secondary w-50">
+                    Cancelar
+                </a>
+                {{ form.submit(class="btn btn-danger w-50") }}
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

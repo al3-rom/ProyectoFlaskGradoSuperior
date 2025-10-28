@@ -1,0 +1,26 @@
+{% extends './base.html' %}
+{% block title %}Reenviar correo de verificación{% endblock %}
+{% block body %}
+<div class="container min-vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+    <h1 class="text-center mb-4">Reenviar enlace de verificación</h1>
+
+    <form action="{{ url_for('auth_page.resend_email') }}" method="POST" class="d-flex flex-column gap-3">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control", placeholder="example@example.com") }}
+      </div>
+
+      <div class="text-center mt-3">
+        {{ form.submit(class="btn btn-dark w-100") }}
+      </div>
+    </form>
+
+    <p class="text-center mt-4 mb-0">
+      ¿Ya tienes cuenta verificada?
+      <a href="{{ url_for('auth_page.login') }}">Inicia sesión aquí</a>.
+    </p>
+  </div>
+</div>
+{% endblock %}

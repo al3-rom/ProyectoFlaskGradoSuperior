@@ -1,0 +1,51 @@
+{% extends './base.html' %}
+{% block title %}Actualizar producto{% endblock %}
+{% block body %}
+<main class="container py-5 min-vh-100 d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 450px; width: 100%;">
+        <h2 class="text-center mb-4">Actualizar Producto</h2>
+
+        <div class="text-center mb-4">
+            <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}"
+                alt="{{ product.title }}"
+                class="rounded mb-2"
+                style="width: 180px; height: 180px; object-fit: cover; border: 1px solid #ddd;">
+            <p class="text-muted mb-0"><small>Imagen actual</small></p>
+        </div>
+
+        <form  data-aviso-cambios method="POST" enctype="multipart/form-data" class="d-flex flex-column gap-3">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.photo.label(class="form-label") }}
+                {{ form.photo(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.price.label(class="form-label") }}
+                {{ form.price(class="form-control") }}
+            </div>
+
+            <div class="form-group">
+                {{ form.category.label(class="form-label") }}
+                {{ form.category(class="form-control") }}
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <a data-cancelar href="{{ url_for('routes_products.get_products') }}" class="btn btn-secondary">Cancelar</a>
+                {{ form.submit(class="btn btn-dark") }}
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

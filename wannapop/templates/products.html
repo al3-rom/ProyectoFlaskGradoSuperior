@@ -1,0 +1,142 @@
+{% extends './base.html' %}
+{% block title %}Productos{% endblock %}
+{% block body %}
+<main>
+    <div class="mb-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+
+        <div>
+            {% if search_query %}
+            <h1 class="mb-0">Resultados para: <strong>"{{ search_query }}"</strong></h1>
+            {% else %}
+            <h1 class="mb-0">Productos</h1>
+            {% endif %}
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row align-items-stretch align-items-sm-center gap-2 ms-md-auto">
+
+            {% if current_user.role.name == 'wanner' %}
+            <a href="{{ url_for('routes_products.create_product') }}" class="btn btn-dark w-100 w-sm-auto">
+                Crear producto <i class="bi bi-plus-lg"></i>
+            </a>
+            {% endif %}
+
+            <form method="get" action="{{ url_for('routes_products.get_products') }}" class="m-0 w-100 w-sm-auto">
+                <select name="category" onchange="this.form.submit()" class="form-select w-auto">
+                    <option value="">Todas las categorias</option>
+                    {% for category in categories %}
+                    <option value="{{ category.name }}" {% if filter_category==category.name %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+
+        </div>
+    </div>
+
+    {% if products %}
+    <section class="row g-4 pb-5">
+        {% for product in products %}
+        {% set sold = product.offers | selectattr('accepted_offer') | list %}
+        {% if (not product.blocked and not sold) or current_user.role.name in ['moderator', 'admin'] %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div
+                class="card h-100 shadow {{ 'border border-danger opacity-50 position-relative' if product.blocked else 'border-0 overflow-hidden' }}">
+                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}">
+                    <img src="{{ url_for('static', filename='uploads/' ~ product.photo) }}" alt="{{ product.title }}"
+                        class="card-img-top object-fit-cover" style="height: 300px;">
+                </a>
+
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="me-2" style="flex: 1; min-width: 0;">
+                            <h5 class="mb-1 {{ 'text-danger' if product.blocked else 'text-dark' }} fw-semibold text-truncate"
+                                style="max-width: 100%;">
+                                {% if product.blocked %}
+                                <a href="{{ url_for('routes_products.get_product', hashid=encode_id(product.id)) }}"
+                                    class="text-danger text-decoration-none">
+                                    {{ product.title }}
+                                </a>
+                                {% else %}
+                                {{ product.title }}
+                                {% endif %}
+                            </h5>
+                            <h6 class="text-dark mb-0 text-truncate" style="max-width: 100%;">
+                                Categoria: <span class="text-secondary">{{ product.category.name.capitalize() }}</span>
+                            </h6>
+                        </div>
+
+                        {% if product.blocked %}
+                        <span class="fw-bold text-danger">BLOQUEADO</span>
+                        {% else %}
+                        <span class="fw-bold text-primary ms-2 flex-shrink-0">{{ product.price }} ⌬</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="text-secondary text-truncate">{{ product.description }}</p>
+                </div>
+
+                {% if product.blocked %}
+                <div class="position-absolute top-50 start-50 translate-middle bg-danger text-white px-3 py-1 rounded">
+                    <i class="bi bi-shield-lock"></i> Bloqueado
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </section>
+
+    {% if pagination.pages > 1 %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="{{ url_for('routes_products.get_products', category=filter_category, search=search_query, page=pagination.prev_num) }}">Anterior</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled" style="cursor: not-allowed;"><span class="page-link">Anterior</span></li>
+            {% endif %}
+
+            {% for p in range(1, pagination.pages + 1) %}
+            <li class="page-item {% if p == pagination.page %}active{% endif %} d-none d-sm-block">
+                <a class="page-link"
+                    href="{{ url_for('routes_products.get_products', category=filter_category, search=search_query, page=p) }}">{{
+                    p }}</a>
+            </li>
+            {% endfor %}
+
+            <li class="page-item active d-sm-none">
+                <span class="page-link">{{ pagination.page }} / {{ pagination.pages }}</span>
+            </li>
+
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link"
+                    href="{{ url_for('routes_products.get_products', category=filter_category, search=search_query, page=pagination.next_num) }}">Siguiente</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    <div class="d-flex justify-content-center gap-2">
+        <a href="{{ url_for('routes_products.export_csv') }}" class="btn btn-dark btn-sm" tabindex="-1" role="button">
+            Exportar CSV
+        </a>
+        <a href="{{ url_for('routes_products.export_excel') }}" class="btn btn-dark btn-sm" tabindex="-1" role="button">
+            Exportar Excel
+        </a>
+    </div>
+
+    {% else %}
+    <div class="text-center py-5 text-secondary">
+        <p>No hay productos todavía.</p>
+    </div>
+    {% endif %}
+</main>
+{% endblock %}

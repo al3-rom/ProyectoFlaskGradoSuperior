@@ -1,0 +1,45 @@
+<header class="w-100">
+  <nav class="navbar navbar-expand-md bg-light fixed-top shadow-sm">
+    <div class="container">
+      <!-- Logo -->
+      <a href="{{ url_for('main_page.home') }}" class="navbar-brand fw-bold fs-4">
+        Wannapop
+      </a>
+
+      <!-- Burger menu -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+        aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Menu -->
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <!-- Search  -->
+        <form method="get" action="{{ url_for('routes_products.get_products') }}"
+          class="d-flex flex-grow-1 my-2 my-md-0 mx-md-2">
+          <input type="search" name="search" placeholder="Busca.." class="form-control rounded-pill px-3"
+            value="{{ request.args.get('search', '') }}">
+        </form>
+
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2 ms-auto">
+          {% if current_user.is_authenticated %}
+          {% if current_user.role.name != 'wanner' %}
+          <a href="{{(url_for('routes_admin.admin'))}}" class="btn btn-outline-dark"><i class="bi bi-gear"></i>
+            Administrar</a>
+          {%endif%}
+          <a href="{{ url_for('routes_profile.profile') }}" class="btn btn-outline-dark"><i class="bi bi-person"></i> Mi
+            perfil</a>
+          <a href="{{ url_for('auth_page.logout') }}" class="btn btn-danger"><i class="bi bi-person-x"></i> Salir</a>
+          {% else %}
+          <a href="{{ url_for('auth_page.login') }}" class="btn btn-outline-dark"><i class="bi bi-person"></i> Iniciar
+            sesión</a>
+          <a href="{{ url_for('auth_page.register') }}" class="btn btn-success""><i class=" bi bi-person-add"></i>
+            Registrarse</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>

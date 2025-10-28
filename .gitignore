@@ -1,0 +1,11 @@
+.venv 
+.env 
+.vscode 
+__pycache__
+/pgdata
+*.db
+/wannapop/static/uploads/*
+!wannapop/static/uploads/6ff4b9d68ca44493b63aa30e8074c082.png
+!wannapop/static/uploads/9b8b3f3eeaa6498c838e296f577926a9.png
+app.log*
+/mysql_data

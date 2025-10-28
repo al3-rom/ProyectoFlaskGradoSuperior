@@ -1,0 +1,107 @@
+{% extends './base.html' %}
+{% block title %}Registrarse{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <form action="{{ url_for('auth_page.register') }}" method="POST" enctype="multipart/form-data"
+    class="rounded-5 shadow w-50 bg-white p-4">
+    {{ form.csrf_token }}
+    <h2 class="text-center fw-bold mb-4">Crear una cuenta</h2>
+
+    <div class="mb-3">
+      {{ form.name(class_="form-control", placeholder="Nombre y apellidos") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.email(class_="form-control", placeholder="tu@email.com") }}
+      {% for error in form.email.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.password(class_="form-control", placeholder="Tu contraseña") }}
+      {% for error in form.password.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.confirm_password(class_="form-control", placeholder="Repite tu contraseña") }}
+      {% for error in form.confirm_password.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.avatar(class_="form-control") }}
+      {% for error in form.avatar.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="accept_terms" required>
+      <label class="form-check-label" for="accept_terms">
+        He leído y acepto las <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">normas del sitio</a>.
+      </label>
+    </div>
+
+    <div class="d-grid">
+      {{ form.submit(class_="btn btn-dark rounded-pill fw-bold") }}
+    </div>
+
+    <p class="text-center mt-4 mb-0">
+      ¿Tienes una cuenta?
+      <a href="{{ url_for('auth_page.login') }}">Iniciar sesión</a>.
+    </p>
+  </form>
+</div>
+
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="termsModalLabel">Normas del sitio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <strong>Resumen:</strong>
+        <p>Este sitio permite la compra y venta de productos entre usuarios. Al registrarte aceptas usar la web de forma
+          responsable y cumplir las normas básicas.</p>
+        <hr>
+
+        <strong>Normas completas:</strong>
+        <ol class="list-group-numbered">
+          <li class="list-group-item">Los usuarios deben proporcionar información veraz.</li>
+          <li class="list-group-item">No se permite la publicación de productos ilegales, falsificados o robados.</li>
+          <li class="list-group-item">Las descripciones e imágenes deben corresponder al producto real.</li>
+          <li class="list-group-item">El sitio no se responsabiliza de las transacciones entre usuarios.</li>
+          <li class="list-group-item">Está prohibido el uso del sitio para actividades fraudulentas o ilícitas.</li>
+          <li class="list-group-item">El incumplimiento de estas normas podrá conllevar la suspensión de la cuenta.</li>
+          <li class="list-group-item">Los datos personales se tratarán según la normativa de protección de datos vigente.</li>
+        </ol>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("form");
+    const checkbox = document.getElementById("accept_terms");
+
+    form.addEventListener("submit", (e) => {
+      if (!checkbox.checked) {
+        e.preventDefault();
+        alert("Debes aceptar las normas del sitio para continuar.");
+      }
+    });
+  });
+</script>
+{% endblock %}
