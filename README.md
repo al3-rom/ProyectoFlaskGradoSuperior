@@ -2,6 +2,30 @@
 # Proyecto 1
 **Versión 0.3**
 
+🏪 Descripción del Proyecto
+
+Wannapop - es una aplicación web inspirada en Wallapop, desarrollada como trabajo académico para el Ciclo Formativo de Grado Superior.
+El objetivo principal es construir una plataforma de compraventa de productos de segunda mano, donde los usuarios puedan registrarse, publicar anuncios, gestionar sus productos, todo dentro de un entorno moderno y seguro.
+
+El proyecto está desarrollado con Flask (Python) como framework principal, e implementa una arquitectura modular con MVC, soporte para bases de datos SQL (SQLite, MySQL, PostgreSQL) y compatibilidad con Docker para su despliegue.
+
+✨ Características principales
+
+🔐 Sistema de registro, login y roles de usuario (comprador / vendedor / admin / moderator)
+
+📸 Publicación de productos con imágenes, precios y descripciones
+
+🔎 Buscador y filtros dinámicos por categoría o palabra clave
+
+📊 Panel de administración para gestionar usuarios y productos
+
+🧱 Arquitectura escalable con SQLAlchemy y Blueprints
+
+🐳 Compatibilidad con Docker (MySQL / PostgreSQL)
+
+💾 Versión local con SQLite para desarrollo rápido
+
+
 ---
 
 ## 🧰 Requisitos
