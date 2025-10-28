@@ -3,7 +3,7 @@
 .vscode 
 __pycache__
 /pgdata
-*.db
+#*.db
 /wannapop/static/uploads/*
 !wannapop/static/uploads/Admin223.jpg
 !wannapop/static/uploads/producto.jpg
